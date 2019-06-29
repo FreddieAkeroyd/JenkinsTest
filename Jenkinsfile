@@ -11,8 +11,6 @@
 //   CLEAN set to YES to clean after build
 //
 
-def ELOCK = "epics_" + env.NODE_NAME
-
 pipeline {
 
   // agent defines where the pipeline will run.
@@ -46,7 +44,7 @@ pipeline {
     stage("Build and Test") {
       options {
             // lock a shared resource in case two different EPICS builds try to run
-            lock(resource: ELOCK, inversePrecedence: true)
+            lock(resource: "epics_${env.NODE_NAME}", inversePrecedence: true)
       }
       stages {
         stage("Build") { 
