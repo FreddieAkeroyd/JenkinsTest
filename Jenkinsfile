@@ -11,7 +11,7 @@
 //   CLEAN set to YES to clean after build
 //
 
-def ELOCK = "g"
+def ELOCK = "epics_" + env.NODE_NAME
 
 pipeline {
 
