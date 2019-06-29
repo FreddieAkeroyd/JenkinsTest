@@ -42,13 +42,14 @@ pipeline {
     }
 
     stage("Build and Test") {
-      options {
-            // lock a shared resource in case two different EPICS builds try to run
-            lock(resource: ELOCK, inversePrecedence: true)
-      }
+//      options {
+//            // lock a shared resource in case two different EPICS builds try to run
+//            lock(resource: ELOCK, inversePrecedence: true)
+//      }
       stages {
         stage("Build") { 
           steps {
+		    lock(resource: ELOCK, inversePrecedence: true) {
             echo "Branch: ${env.BRANCH_NAME}"
             echo "Build Number: ${env.BUILD_NUMBER}"
             script {
@@ -71,6 +72,7 @@ pipeline {
             echo ${env.WORKSPACE} ${env.ZIPNAME} ${params.EPICS_HOST_ARCH} ${env.CLEAN_BUILD}
             """
           }
+		  }
         }
 
         stage("Test") { 
