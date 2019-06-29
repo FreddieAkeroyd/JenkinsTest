@@ -42,13 +42,13 @@ pipeline {
     }
 
     stage("Build and Test") {
-      options {
-            // lock a shared resource in case two different EPICS builds try to run
-            lock(resource: "epics_${env.NODE_NAME}", inversePrecedence: true)
-      }
+	  // would like to take lock out here in options stagement, but cannot read environment variables
+	  // when we can do this, we can add a proper test stage after that requires epics lock, until then
+      // we nede to keep such tests in build stage	  
       stages {
-        stage("Build") { 
+        stage("Build") {
           steps {
+            // lock a shared resource in case two different EPICS builds try to run
 		    lock(resource: ELOCK, inversePrecedence: true) {
             echo "Branch: ${env.BRANCH_NAME}"
             echo "Build Number: ${env.BUILD_NUMBER}"
@@ -74,12 +74,12 @@ pipeline {
           }
 		  }
         }
-
-        stage("Test") { 
+		stage("Test") {
+		  // tests not needing lock on EPICS dir
           steps {
             echo "Testing"
           }
-        }
+		}
       }
     }
 
