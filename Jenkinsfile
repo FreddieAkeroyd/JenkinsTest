@@ -50,29 +50,31 @@ pipeline {
           steps {
             // lock a shared resource in case two different EPICS builds try to run
 		    lock(resource: ELOCK, inversePrecedence: true) {
-            echo "Branch: ${env.BRANCH_NAME}"
-            echo "Build Number: ${env.BUILD_NUMBER}"
-            script {
-              if (params.CLEAN != null && params.CLEAN == "YES") {
-                env.CLEAN_BUILD = "clean"
-              } else {
+                     timeout(100) {
+              echo "Branch: ${env.BRANCH_NAME}"
+              echo "Build Number: ${env.BUILD_NUMBER}"
+              script {
+                if (params.CLEAN != null && params.CLEAN == "YES") {
+                  env.CLEAN_BUILD = "clean"
+                } else {
                   env.CLEAN_BUILD = ""
-              }
-              if (params.ZIPNAME != null) {
-                env.ZIPNAME = params.ZIPNAME
-              } else {
-                env.ZIPNAME = "\"\""
-              }
-            }
-          echo "Environment set, executing batch file"
-          bat """
-            set BUILD_NUMBER=${env.BUILD_NUMBER}
-            set JOB_NAME=${env.JOB_NAME}
-            set RELEASE=NO
-            echo ${env.WORKSPACE} ${env.ZIPNAME} ${params.EPICS_HOST_ARCH} ${env.CLEAN_BUILD}
-            """
+                }
+                if (params.ZIPNAME != null) {
+                  env.ZIPNAME = params.ZIPNAME
+                } else {
+                  env.ZIPNAME = "\"\""
+                }
+			  }
+              echo "Environment set, executing batch file"
+              bat """
+                set BUILD_NUMBER=${env.BUILD_NUMBER}
+                set JOB_NAME=${env.JOB_NAME}
+                set RELEASE=NO
+                echo ${env.WORKSPACE} ${env.ZIPNAME} ${params.EPICS_HOST_ARCH} ${env.CLEAN_BUILD}
+              """
+			}
+               }
           }
-		  }
         }
 		stage("Test") {
 		  // tests not needing lock on EPICS dir
