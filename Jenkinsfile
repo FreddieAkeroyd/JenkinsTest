@@ -105,6 +105,7 @@ pipeline {
 		    genstep("SYMBOLS", params, env)
          }
         }
+      }
     }
   }
 
@@ -140,4 +141,3 @@ pipeline {
     }
   }  
 }
-
