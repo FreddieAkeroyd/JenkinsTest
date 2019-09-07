@@ -133,6 +133,7 @@ pipeline {
           bat """
                   set WORKWIN=%WORKSPACE:/=\\%
                   if "${env.CLEAN_BUILD}" == "clean" (
+				      echo hello
                   )
           """
         }
