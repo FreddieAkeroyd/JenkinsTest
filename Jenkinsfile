@@ -76,14 +76,12 @@ pipeline {
         steps {
             // lock a shared node specific resource in case two different EPICS builds try to run
             echo "Building"
-            lock(resource: ELOCK, inversePrecedence: true) {
               timeout(time: 16, unit: 'HOURS') {
                 echo "Branch: ${env.BRANCH_NAME}"
                 echo "Build Number: ${env.BUILD_NUMBER}"
 				genstep("BUILD", params, env)
 				genstep("TEST", params, env)
               }
-            }
         }
     }
 
